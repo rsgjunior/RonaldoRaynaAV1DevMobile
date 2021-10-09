@@ -20,6 +20,8 @@ export default function Game() {
   
   let frutas = [Kiwi, Limao, Maca, Tomate];
 
+  const [minutos, setMinutos] = useState(2)
+  const [segundos, setSegundos] = useState(0)
   const [splash, setSplash] = useState(true)
   const [preGame, setPreGame] = useState(false)
   const [terminou, setTerminou] = useState(false)
@@ -69,7 +71,26 @@ export default function Game() {
     setGameStart(true)
   }
 
-  if(score === 10) {
+  function atualizarContador() {
+
+    if(minutos === 0 && segundos === 0) {
+      timer.clearInterval(this, 'atualizarContador')
+      return terminarJogo()
+    } 
+
+    if(minutos > 0 && segundos === 0) {
+      setMinutos(minutos-1)
+      setSegundos(59)
+      return
+    }
+
+    setSegundos(segundos-1)
+
+  }
+
+  timer.setInterval(this, 'atualizarContador', atualizarContador, 1000)
+
+  if(score === 12) {
     terminarJogo()
   }
 
@@ -147,6 +168,7 @@ export default function Game() {
     return (
       <View style={styles.container}>
         <Text style={styles.scoreText}>Score: {score}</Text>
+        <Text style={styles.scoreText}>Contador: {minutos}:{segundos}</Text>
   
         <TouchableOpacity onPress={clicarNaFruta} style={styles.fruta} >
           <Image source={selectedImage} onPress={clicarNaFruta} style={styles.img} />
